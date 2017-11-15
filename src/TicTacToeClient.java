@@ -5,12 +5,8 @@ import java.util.Scanner;
 public class TicTacToeClient {
     public static void main(String[] args) throws Exception {
         try (Socket socket = new Socket("18.221.102.182",38006)) {
-            int[][] board = new int[3][3];
             System.out.println("Connected to server.");
             InputStream is = socket.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            BufferedReader br = new BufferedReader(isr);
-            BufferedReader brIS = new BufferedReader(new InputStreamReader(System.in));
             PrintStream out = new PrintStream((socket.getOutputStream()),true,"UTF-8");
 
             ByteArrayOutputStream bO = new ByteArrayOutputStream();
@@ -37,7 +33,7 @@ public class TicTacToeClient {
                         ErrorMessage error = (ErrorMessage) oIE.readObject();
                         System.out.println(error.getError());
                     }
-                    catch (IOException e){
+                    catch (Exception e){
 
                     }
                 }
@@ -46,21 +42,9 @@ public class TicTacToeClient {
             Thread listeningThread = new Thread(listen);
             listeningThread.start();
 
+            //Still needs options to use CommandMessage
             while(msg.getStatus().equals(BoardMessage.Status.IN_PROGRESS)){
-                for(int row=0;row<3;row++){
-                    for(int col=0;col<3;col++){
-                        if(msg.getBoard()[row][col]==0){
-                            System.out.print("[   ] ");
-                        }
-                        else if(msg.getBoard()[row][col]==0) {
-                            System.out.print("[ X ] ");
-                        }
-                        else{
-                            System.out.print("[ O ] ");
-                        }
-                    }
-                    System.out.println("");
-                }
+                printBoard(msg);
                 byte r=0;
                 byte c =0;
                 while(true) {
@@ -88,6 +72,28 @@ public class TicTacToeClient {
                 oOM.writeObject(new MoveMessage(r,c));
                 out.write(bOM.toByteArray());
             }
+            System.out.println(msg.getStatus());
+            printBoard(msg);
+            is.close();
+            socket.close();
+            System.out.println("Disconnected from server.");
+        }
+    }
+
+    public static void printBoard(BoardMessage msg){
+        for(int row=0;row<3;row++){
+            for(int col=0;col<3;col++){
+                if(msg.getBoard()[row][col]==0){
+                    System.out.print("[   ] ");
+                }
+                else if(msg.getBoard()[row][col]==0) {
+                    System.out.print("[ X ] ");
+                }
+                else{
+                    System.out.print("[ O ] ");
+                }
+            }
+            System.out.println("");
         }
     }
 }
