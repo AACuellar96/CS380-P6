@@ -76,69 +76,21 @@ public class TicTacToeClient {
                     oOCM.writeObject(new CommandMessage(CommandMessage.Command.NEW_GAME));
                     out.write(bOCM.toByteArray());
                 }
-                byte r=0;
-                byte c =0;
+                byte r;
+                byte c;
                 while(true) {
                     System.out.println("Please enter your move based on a 0 index, e.g 0-2, in regards to the row.");
-
-
-                    while(true) {
-                        try {
-                            r = scanner.nextByte();
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of row.");
-                        }
-                        break;
-                    }
-
-
+                    r=getRow(scanner);
                     while (r < 0 || r > 2) {
                         System.out.println("Nonexistent row, please enter another row.");
-
-
-                        while(true) {
-                            try {
-                                r = scanner.nextByte();
-                            } catch (InputMismatchException e) {
-                                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of row.");
-                            }
-                            break;
-                        }
-
-
+                        r=getRow(scanner);
                     }
                     System.out.println("Please enter your move based on a 0 index, e.g 0-2, in regards to the col.");
-
-
-
-                    while(true) {
-                        try {
-                            c = scanner.nextByte();
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of col.");
-                        }
-                        break;
-                    }
-
-
-
+                    c = getCol(scanner);
                     while (c < 0 || c > 2) {
                         System.out.println("Nonexistent row, please enter another col.");
-
-
-
-                        while(true) {
-                            try {
-                                c = scanner.nextByte();
-                            } catch (InputMismatchException e) {
-                                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of col.");
-                            }
-                            break;
-                        }
+                        c = getCol(scanner);
                     }
-
-
-
                     if(msg.getBoard()[r][c]!=0){
                         System.out.println("Square designated by row and column is already filled, please try again.");
                     }
@@ -173,6 +125,30 @@ public class TicTacToeClient {
                 }
             }
             System.out.println("");
+        }
+    }
+
+    public static byte getRow(Scanner scanner){
+        byte r=0;
+        while(true) {
+            try {
+                r = scanner.nextByte();
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of row.");
+            }
+            return r;
+        }
+    }
+
+    public static byte getCol(Scanner scanner){
+        byte c=0;
+        while(true) {
+            try {
+                c = scanner.nextByte();
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of col.");
+            }
+            return c;
         }
     }
 }
