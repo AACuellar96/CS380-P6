@@ -1,5 +1,7 @@
+
 import java.io.*;
 import java.net.Socket;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TicTacToeClient {
@@ -42,24 +44,101 @@ public class TicTacToeClient {
             Thread listeningThread = new Thread(listen);
             listeningThread.start();
 
-            //Still needs options to use CommandMessage
             while(msg.getStatus().equals(BoardMessage.Status.IN_PROGRESS)){
                 printBoard(msg);
+                System.out.println("Please choose the number corresponding to the action you would like to take:");
+                System.out.println("1. Continue the game, 2. Surrender, 3. Exit, or 4. Start a New Game");
+                System.out.println("Entering a number that isn't one of the above choices will default to continuing the game.");
+                int choice=0;
+                while(true) {
+                    try {
+                        choice = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.out.println("Please enter one of the integers 1,2,3,4 corresponding to your choice.");
+                    }
+                    break;
+                }
+                if(choice==2){
+                    ByteArrayOutputStream bOCM = new ByteArrayOutputStream();
+                    ObjectOutputStream oOCM = new ObjectOutputStream(bOCM);
+                    oOCM.writeObject(new CommandMessage(CommandMessage.Command.SURRENDER));
+                    out.write(bOCM.toByteArray());
+                }
+                else if(choice==3){
+                    ByteArrayOutputStream bOCM = new ByteArrayOutputStream();
+                    ObjectOutputStream oOCM = new ObjectOutputStream(bOCM);
+                    oOCM.writeObject(new CommandMessage(CommandMessage.Command.EXIT));
+                    out.write(bOCM.toByteArray());
+                }
+                else if(choice==4){
+                    ByteArrayOutputStream bOCM = new ByteArrayOutputStream();
+                    ObjectOutputStream oOCM = new ObjectOutputStream(bOCM);
+                    oOCM.writeObject(new CommandMessage(CommandMessage.Command.NEW_GAME));
+                    out.write(bOCM.toByteArray());
+                }
                 byte r=0;
                 byte c =0;
                 while(true) {
                     System.out.println("Please enter your move based on a 0 index, e.g 0-2, in regards to the row.");
-                    r = scanner.nextByte();
+
+
+                    while(true) {
+                        try {
+                            r = scanner.nextByte();
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of row.");
+                        }
+                        break;
+                    }
+
+
                     while (r < 0 || r > 2) {
                         System.out.println("Nonexistent row, please enter another row.");
-                        r = scanner.nextByte();
+
+
+                        while(true) {
+                            try {
+                                r = scanner.nextByte();
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of row.");
+                            }
+                            break;
+                        }
+
+
                     }
                     System.out.println("Please enter your move based on a 0 index, e.g 0-2, in regards to the col.");
-                    c = scanner.nextByte();
+
+
+
+                    while(true) {
+                        try {
+                            c = scanner.nextByte();
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of col.");
+                        }
+                        break;
+                    }
+
+
+
                     while (c < 0 || c > 2) {
                         System.out.println("Nonexistent row, please enter another col.");
-                        c = scanner.nextByte();
+
+
+
+                        while(true) {
+                            try {
+                                c = scanner.nextByte();
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter one of the one of the bytes 0,1,2 corresponding to your choice of col.");
+                            }
+                            break;
+                        }
                     }
+
+
+
                     if(msg.getBoard()[r][c]!=0){
                         System.out.println("Square designated by row and column is already filled, please try again.");
                     }
