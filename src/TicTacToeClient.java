@@ -26,13 +26,13 @@ public class TicTacToeClient {
                 System.out.println("Please choose the number corresponding to the action you would like to take:");
                 System.out.println("1. Continue the game, 2. Surrender, 3. Exit, or 4. Start a New Game");
                 System.out.println("Entering a number that isn't one of the above choices will default to continuing the game.");
-                int choice;
+                byte choice;
                 while(true) {
                     try {
-                        choice = scanner.nextInt();
+                        choice = scanner.nextByte();
                         break;
                     } catch (InputMismatchException e) {
-                        System.out.println("Please enter one of the integers 1,2,3,4 corresponding to your choice.");
+                        System.out.println("Please enter one of the numbers 1,2,3,4 corresponding to your choice.");
                     }
                 }
                 if(choice==2){
@@ -56,7 +56,7 @@ public class TicTacToeClient {
                     System.out.println("Please enter your move based on a 0 index, e.g 0-2, in regards to the col.");
                     c = getCol(scanner);
                     while (c < 0 || c > 2) {
-                        System.out.println("Nonexistent row, please enter another col.");
+                        System.out.println("Nonexistent col, please enter another col.");
                         c = getCol(scanner);
                     }
                     if(((BoardMessage) msg).getBoard()[r][c]!=0){
