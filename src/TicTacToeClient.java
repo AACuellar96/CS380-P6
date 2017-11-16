@@ -15,6 +15,7 @@ public class TicTacToeClient {
             Message msg =(Message) receiveMessage.readObject();
             if(msg.getType().equals(MessageType.ERROR)) {
                 System.out.println("Error Detected!");
+                sendMessage.writeObject(new CommandMessage(CommandMessage.Command.EXIT));
                 socket.close();
                 System.out.println("Disconnected from server.");
                 return;
@@ -71,6 +72,7 @@ public class TicTacToeClient {
                 msg = (Message) receiveMessage.readObject();
                 if(msg.getType().equals(MessageType.ERROR)) {
                     System.out.println("Error Detected!");
+                    sendMessage.writeObject(new CommandMessage(CommandMessage.Command.EXIT));
                     socket.close();
                     System.out.println("Disconnected from server.");
                     return;
